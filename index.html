@@ -12,19 +12,26 @@
     <section>
       <div class="container">
         <div class="row">
-          <div class="col"></div>
+          <div class="col title-instructions">
             <h1>Picking Fruits</h1>
             <h3>Instructions:</h3>
-            <p>Collect as many fruits as you can in 10 seconds! Watch out for the rotton fruit.</p>
-          </div>
-          <div class="col">
+            <p>Collect 3 fruits to move on to the next level. Reach Level 7 to win.</p>
             <h4 id="displayName">Player Name: </h4>
-            <input type="text" id="inputName" /><button class="name-button" id="nameButton" onclick="display()">Submit</button>
+            <input type="text" id="inputName" class="input-name" /><button class="name-button" id="nameButton" onclick="display()">Submit</button>
             <p id="timeRemainingArea">Time Remaining: </p>
             <p id="scoreArea">Score: </p>
             <p id="levelArea">Level: </p>
-            <p id="historyArea">History of scores</p>
+            <p id="levelWarning"></p>
+            <p id="timePassed">Time Passed: </p>
+            <p id="topScoresArea">Top Scores: </p>
             <button class="reset-button" id="reset" onclick="reset()">Reset here</button>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <!-- <canvas id="game"></canvas> -->
           </div>
         </div>
       </div>

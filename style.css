@@ -1,4 +1,50 @@
-:root{
+/* :root{
     background-color: lightyellow;
     text-align: center;
+} */
+/* canvas { 
+    float: right;
+} */
+/* .title-instructions {
+    float: left;
+}
+.player-info {
+    float: left;
+} */
+
+.input-name {
+    border-color: black;
+    border-spacing: 1px;
+    border-radius: 5%;
+    padding: 13px;
+    font-size:16px;
+    margin: 4px 2px;
+}
+
+.name-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5%;
+  }
+
+.reset-button{
+    background-color:darkred;
+    border: none;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5%;
 }
