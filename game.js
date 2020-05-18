@@ -19,8 +19,8 @@ canvas.width = 512;
 canvas.height = 480;
 document.body.appendChild(canvas);
 
-let bgReady, heroReady, monsterReady, rottenFruitReady, wolfReady;
-let bgImage, heroImage, monsterImage, rottenFruitImage, wolfImage;
+let bgReady, heroReady, strawberryReady, rottenFruitReady, wolfReady;
+let bgImage, heroImage, strawberryImage, rottenFruitImage, wolfImage;
 
 let startTime = Date.now();
 const SECONDS_PER_ROUND = 30;
@@ -36,6 +36,8 @@ let history = [];
 let isGameOver = true
 //let resetButton = document.getElementById("reset").innerHTML
 
+let userName = document.getElementById("inputName").value;
+
 function loadImages() {
   bgImage = new Image();
   bgImage.onload = function () {
@@ -50,12 +52,11 @@ function loadImages() {
   };
   heroImage.src = "/images/squirrel 32 px.png";
 
-  monsterImage = new Image();
-  monsterImage.onload = function () {
-    // show the monster image
-    monsterReady = true;
+  strawberryImage = new Image();
+  strawberryImage.onload = function () {
+    strawberryReady = true;
   };
-  monsterImage.src = "images/fruits/strawberry 32px.png";
+  strawberryImage.src = "images/fruits/strawberry 32px.png";
   isGameOver=false;
 
 }
@@ -79,18 +80,13 @@ function loadWolfImage (){
 
 /** 
  * Setting up our characters.
- * 
- * heroX = X position of our hero.
- * heroY = Y position.
- * We'll need these values to know where to "draw" the hero.
- * 
  */
 
 let heroX = canvas.width / 2;
 let heroY = canvas.height / 2;
 
-let monsterX = 100;
-let monsterY = 100;
+let strawberryX = 100;
+let strawberryY = 100;
 
 let rottenFruitX = 400;
 let rottenFruitY = 300;
@@ -113,6 +109,10 @@ function setupKeyboardListeners() {
   addEventListener("keyup", function (key) {
     delete keysDown[key.keyCode];
   }, false);
+}
+
+function startTimer(){
+  elapsedTime = Math.floor((Date.now() - startTime) / 1000);
 }
 
 
@@ -138,7 +138,8 @@ let update = function () {
 
   // this needs to be under the "if" statement so the if statement runs first
   // if condition ends up being false, it will run the formula below
-  elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+  //elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+  startTimer();
 
   // will display the time counter
   document.getElementById('timePassed').innerHTML = `Time Passed: ${elapsedTime}s`;
@@ -175,26 +176,26 @@ let update = function () {
   document.getElementById("levelArea").innerHTML = `Level: ${level}`
 
   // MAIN "ACTION" FUNCTION
-  // If hero touches monster, monster will change location. 
+  // If hero touches strawberry, strawberry will change location. 
   if (
-    heroX <= (monsterX + 32)
-    && monsterX <= (heroX + 32)
-    && heroY <= (monsterY + 32)
-    && monsterY <= (heroY + 32)
+    heroX <= (strawberryX + 32)
+    && strawberryX <= (heroX + 32)
+    && heroY <= (strawberryY + 32)
+    && strawberryY <= (heroY + 32)
     ) {
-    // Pick a new random location for the monster.
-    monsterX = Math.floor(Math.random()*(canvas.width-32)) // places boundaries
-    monsterY = Math.floor(Math.random()*(canvas.height-32))
+    // Pick a new random location for the strawberry.
+    strawberryX = Math.floor(Math.random()*(canvas.width-32)) // places boundaries
+    strawberryY = Math.floor(Math.random()*(canvas.height-32))
     score++;
     
     //level up
-    level = 1 + (Math.floor(score / 3));
+    level = 1 + (Math.floor(score / 5));
 
     // move the rotten fruit
     // rottenFruitX = Math.floor(Math.random()*(canvas.width-32)) 
     // rottenFruitY = Math.floor(Math.random()*(canvas.height-32))
 
-    // // move the wolf -- NEED TO ANIMATE THIS
+    // // move the wolf 
     // wolfX = Math.floor(Math.random()*(canvas.width-32)) 
     // wolfY = Math.floor(Math.random()*(canvas.height-32))
 
@@ -205,14 +206,42 @@ let update = function () {
       rottenFruitY = Math.floor(Math.random()*(canvas.height-32))
       document.getElementById("levelWarning").innerHTML = `Watch out for the rotten fruit! Catching one will subtract your score.`
     }
+    if (level >=2 && level < 3 ){
+      appearRottenFruit();
+      document.getElementById("levelWarning").innerHTML = `Watch out for the rotten fruit! Catching one will subtract your score.`
+      if (
+        heroX <= (rottenFruitX + 32)
+        && rottenFruitX <= (heroX + 32)
+        && heroY <= (rottenFruitY + 32)
+        && rottenFruitY <= (heroY + 32)
+        ) {
+          console.log("rotten fruit game")
+          score--;
+          rottenFruitX = Math.floor(Math.random()*(canvas.width-32)) 
+          rottenFruitY = Math.floor(Math.random()*(canvas.height-32))
+        }
+    
+    }
 
     // level 3 difficulty - enter wolf
     if (level >= 3){
-      loadWolfImage();
-      wolfX = Math.floor(Math.random()*(canvas.width-32)) 
-      wolfY = Math.floor(Math.random()*(canvas.height-32))
+      appearWolf();
       document.getElementById("levelWarning").innerHTML = `Here comes the wolf! Running into it will end the game.`
-    }
+        if (
+          heroX <= (wolfX + 32)
+          && wolfX <= (heroX + 32)
+          && heroY <= (wolfY + 32)
+          && wolfY <= (heroY + 32)
+          ) {
+            console.log("wolf end game")
+            score--;
+            rottenFruitX = Math.floor(Math.random()*(canvas.width-32)) 
+            rottenFruitY = Math.floor(Math.random()*(canvas.height-32))
+            endGame();
+            //return;
+          }
+        
+      }
 
 
   }
@@ -231,6 +260,7 @@ let update = function () {
     }
 
   // END GAME IF HERO TOUCHES WOLF
+  //CURRENTLY DOESNT WORK - NEEDS TO FIX
   // if (
   //   heroX <= (wolfX + 32)
   //   && wolfX <= (heroX + 32)
@@ -239,7 +269,7 @@ let update = function () {
   //   ) {
   //     console.log("wolf end game")
   //     // endGame();
-  //     return;
+  //     //return;
   //   }
 
   //this means every time the render updates, it will move the monster +3
@@ -249,6 +279,46 @@ let update = function () {
 
 
 };
+
+function appearRottenFruit(){
+  loadRottenFruitImage();
+  rottenFruitX = Math.floor(Math.random()*(canvas.width-32)) 
+  rottenFruitY = Math.floor(Math.random()*(canvas.height-32))
+}
+
+function appearWolf(){
+  loadWolfImage();
+  wolfX = Math.floor(Math.random()*(canvas.width-32)) 
+  wolfY = Math.floor(Math.random()*(canvas.height-32))
+}
+
+
+// MOVING WOLF 
+
+var wolfRadius = 10;
+var x = canvas.width/2;
+var y = canvas.height-30;
+var dx = 2;
+var dy = -2;
+
+// function drawWolfMoving() {
+//   //ctx.clearRect(0, 0, canvas.width, canvas.height);
+//   loadWolfImage();
+  
+//   if(x + dx > canvas.width-wolfRadius || x + dx < wolfRadius) {
+//       dx = -dx;
+//   }
+//   if(y + dy > canvas.height-wolfRadius || y + dy < wolfRadius) {
+//       dy = -dy;
+//   }
+  
+//   x += dx;
+//   y += dy;
+// }
+
+// setInterval(drawWolfMoving, 10);
+
+
 
 /**
  * This function, render, runs as often as possible.
@@ -260,8 +330,8 @@ var render = function () {
   if (heroReady) {
     ctx.drawImage(heroImage, heroX, heroY);
   }
-  if (monsterReady) {
-    ctx.drawImage(monsterImage, monsterX, monsterY);
+  if (strawberryReady) {
+    ctx.drawImage(strawberryImage, strawberryX, strawberryY);
   }
   if (rottenFruitReady) {
     ctx.drawImage(rottenFruitImage, rottenFruitX, rottenFruitY);
@@ -283,8 +353,9 @@ var render = function () {
   // }
 }; // $ function is to calculate the time
 
-document.getElementById("timeRemainingArea").innerHTML = `Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`;
-document.getElementById("scoreArea").innerHTML = `Score: ${score}`;
+//this is already placed in render
+// document.getElementById("timeRemainingArea").innerHTML = `Time Remaining: ${SECONDS_PER_ROUND - elapsedTime}s`;
+// document.getElementById("scoreArea").innerHTML = `Score: ${score}`;
 
 // time out 
 function timeOut() {
@@ -301,6 +372,7 @@ function display(){
 function reset(){
   // reset the value 
   console.log("Reset Game")
+  timeOut();
 
   //call the timer again
   startTime = Date.now();
@@ -314,17 +386,59 @@ function reset(){
   loadImages();
   setupKeyboardListeners();
   main();
-  update;
+  update();
 
 
   // add char + monster reset here
   heroX = canvas.width / 2;
   heroY = canvas.height / 2;
-  monsterX = 100;
-  monsterY = 100;
+  strawberryX = 100;
+  strawberryY = 100;
 
+  // make rotten fruit & wolf disappear
+  appearRottenFruit = false;
+
+
+
+  // character speed
+  if (38 in keysDown) { // Player is holding up key
+    heroY -= 1;
+  }
+  if (40 in keysDown) { // Player is holding down key
+    heroY += 1;
+  }
+  if (37 in keysDown) { // Player is holding left key
+    heroX -= 1;
+  }
+  if (39 in keysDown) { // Player is holding right key
+    heroX += 1;
+  }
 
 }
+
+// Score Storage =>> need to add array function
+const applicationState = {
+  isGameOver: true,
+  currentUser: document.getElementById("displayName").innerHTML = `Player Name: ${userName}`,
+  highScore: {
+    user: "PrimeTimeTran",
+    score: 22,
+    date: "Thu Oct 02 2019 15:11:51 GMT+0700"
+  },
+  gameHistory: [
+    { user: "Chloe", score: 21, date: "Thu Oct 01 2019 15:11:51 GMT-6000" },
+    { user: "Duc", score: 19, date: "Thu Sep 03 2019 15:11:51 GMT+0700" },
+    { user: "Huy", score: 18, date: "Thu Oct 03 2019 15:11:51 GMT+0700" }
+  ]
+};
+
+let highScore = [];
+let gameHistory = [];
+
+localStorage.setItem('highScore',JSON.stringify([]));
+
+
+
 
 
 /**
@@ -346,11 +460,18 @@ var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
 // Let's play this game!
+// function startGame(){
 loadImages();
 setupKeyboardListeners();
 main();
+// }
 
 function endGame() {
   // if timer hits 0, stop action of hero
 
+  // when game is over, save score kept in '' item into localStorage
+  isStorage && localStorage.setItem('scoreArea')
+
+  applicationState 
 }
+

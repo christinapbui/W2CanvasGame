@@ -12,30 +12,37 @@
     <section>
       <div class="container">
         <div class="row">
-          <div class="col title-instructions">
+          <div class="d-flex justify-content-around title-instructions">
             <h1>Picking Fruits</h1>
             <h3>Instructions:</h3>
             <p>Collect 3 fruits to move on to the next level. Reach Level 7 to win.</p>
             <h4 id="displayName">Player Name: </h4>
             <input type="text" id="inputName" class="input-name" /><button class="name-button" id="nameButton" onclick="display()">Submit</button>
+            <br>
+            <!-- <button class="start-button" id="startButton" onclick="startGame()">Start</button> -->
             <p id="timeRemainingArea">Time Remaining: </p>
             <p id="scoreArea">Score: </p>
             <p id="levelArea">Level: </p>
             <p id="levelWarning"></p>
             <p id="timePassed">Time Passed: </p>
-            <p id="topScoresArea">Top Scores: </p>
-            <button class="reset-button" id="reset" onclick="reset()">Reset here</button>
+            <p id="highScoresArea">High Score: </p>
+            <p id="topScoresArea">Top Scores
+              <ul class="top-scores-list">
+                <li>Username: </li>
+                <li>Score </li>
+                <li>Date: </li>
+              </ul>
+            </p>
+            <button class="reset-button" id="reset" onclick="reset()">Reset</button>
+            <canvas id="game"></canvas>
           </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col">
-            <!-- <canvas id="game"></canvas> -->
+          <div class="d-flex justify-content-around canvas-game">
+            <canvas id="game"></canvas>
           </div>
         </div>
       </div>
     </section>
     <script src="game.js"></script>
+    <script src="gamestorage.js"></script>
   </body>
 </html>
